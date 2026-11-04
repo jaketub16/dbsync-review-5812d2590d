@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>DBSync × Aletto · Pilot Review & Path Forward</title>
+<link rel="icon" href="favicon.png">
+<style>
+@font-face{font-family:Geist;src:url(geist.woff2) format('woff2');font-weight:100 900;font-display:swap}
+@font-face{font-family:JBMono;src:url(jbmono.woff2) format('woff2');font-weight:500;font-display:swap}
+:root{--bg:#08090A;--red:#FF4438;--red2:#C4271D;--green:#3ECF6E;--yellow:#F5B544;--text:#F7F8F8;--mut:rgba(247,248,248,.58);--dim:rgba(247,248,248,.38);--line:rgba(255,255,255,.09);--glass:rgba(255,255,255,.045);--glass2:rgba(255,255,255,.075);--r:22px;--sans:Geist,-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;--mono:JBMono,ui-monospace,monospace}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 var(--sans);letter-spacing:-.005em}
+.bg{position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 620px at 6% -8%,rgba(255,68,56,.24),transparent 60%),radial-gradient(800px 700px at 102% 8%,rgba(196,39,29,.16),transparent 60%),radial-gradient(900px 800px at 50% 115%,rgba(62,207,110,.07),transparent 60%),linear-gradient(180deg,#0B0C0E,#08090A 60%,#060607)}
+.bg:after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1px);background-size:22px 22px;mask-image:linear-gradient(#000,transparent 70%)}
+main{max-width:1120px;margin:0 auto;padding:22px 18px 70px}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:var(--r);backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 24px 70px -34px rgba(0,0,0,.85)}
+nav{position:sticky;top:12px;z-index:5;display:flex;align-items:center;gap:14px;padding:10px 14px;margin-bottom:26px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}.brand img{width:30px;height:30px;border-radius:8px}
+.word{font-weight:700;letter-spacing:.08em;font-size:14px}.word i{font-style:normal;color:var(--red)}
+nav .links{flex:1;display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
+nav .links a{color:var(--mut);text-decoration:none;font-size:13px;padding:6px 10px;border-radius:999px}nav .links a:hover{color:var(--text);background:var(--glass2)}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 14px var(--sans);color:#fff;background:linear-gradient(180deg,#FF5A4F,#E0352A);border:0;border-radius:999px;padding:11px 18px;text-decoration:none;box-shadow:0 10px 30px -12px rgba(255,68,56,.8),0 1px 0 rgba(255,255,255,.25) inset;cursor:pointer}
+.btn.ghost{background:var(--glass2);box-shadow:none;border:1px solid var(--line)}
+.btn.sm{padding:8px 14px;font-size:13px}
+.eyebrow{font:500 11.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
+h1{font-size:clamp(36px,6vw,66px);line-height:1.02;letter-spacing:-.04em;margin:14px 0 16px;font-weight:650}
+h1 em{font-style:normal;background:linear-gradient(90deg,#fff,#FF8A80 60%,#FF4438);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:clamp(26px,3.4vw,38px);letter-spacing:-.03em;line-height:1.1;margin:8px 0 10px;font-weight:620}
+h3{font-size:17px;margin:0 0 6px;letter-spacing:-.01em}
+p{margin:0 0 12px}.lead{font-size:18px;color:var(--mut);max-width:720px}
+.muted{color:var(--mut)}.dim{color:var(--dim)}.small{font-size:12.5px}.mono{font-family:var(--mono)}
+section{margin:74px 0 0}.hd{max-width:760px;margin-bottom:22px}
+.hero{padding:40px 34px 34px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;right:-120px;top:-140px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(255,68,56,.35),transparent 65%);filter:blur(10px)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 24px}.chip{font:500 12px var(--mono);padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--glass);color:var(--mut)}
+.grid{display:grid;gap:12px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}
+.kpi{padding:16px 18px}.kpi span{display:block;font-size:12.5px;color:var(--mut)}.kpi b{display:block;font:500 30px var(--mono);letter-spacing:-.04em;margin-top:4px}.kpi small{color:var(--dim);font-size:12px}
+.card{padding:22px}
+.phase{padding:20px}.phase .tag{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.phase .big{font:500 34px var(--mono);letter-spacing:-.04em;margin:6px 0 2px}.phase.best{border-color:rgba(62,207,110,.35)}.phase.best .big{color:var(--green)}.phase.now .big{color:var(--yellow)}
+.rowl{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:7px 0;font-size:13.5px}.rowl b{font-family:var(--mono);font-weight:500}
+.chart{padding:20px 20px 12px}.legend{display:flex;gap:16px;font-size:12px;color:var(--mut);margin-bottom:6px;flex-wrap:wrap}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+svg text{font-family:var(--mono);fill:rgba(247,248,248,.45);font-size:10px}
+.quote{padding:18px 20px;border-left:2px solid var(--red)}.quote p{font-size:15.5px;margin:0 0 8px}.quote span{font:500 11.5px var(--mono);color:var(--dim);letter-spacing:.04em}
+.promise{display:flex;gap:14px;padding:16px 18px;align-items:flex-start}.promise .n{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font:600 13px var(--mono);background:rgba(255,68,56,.14);color:#FF8A80;border:1px solid rgba(255,68,56,.3)}
+.promise p{margin:0;color:var(--mut);font-size:14px}.promise h3{font-size:15.5px}
+.ws{padding:22px;position:relative}.ws .ico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--glass2);border:1px solid var(--line);margin-bottom:14px;font-size:18px}
+.ws ul{margin:10px 0 0;padding-left:18px;color:var(--mut);font-size:13.5px}.ws li{margin:4px 0}
+.tl{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;position:relative}
+.step{padding:18px}.step .d{font:500 11.5px var(--mono);color:var(--red);letter-spacing:.06em;text-transform:uppercase}.step p{color:var(--mut);font-size:13.5px;margin:6px 0 0}
+.price{padding:28px;display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:start}
+.strike{font:500 20px var(--mono);color:var(--dim);text-decoration:line-through}.amt{font:500 56px var(--mono);letter-spacing:-.05em;line-height:1}
+.badge{display:inline-block;font:600 11px var(--mono);padding:4px 9px;border-radius:999px;background:rgba(62,207,110,.12);color:var(--green);border:1px solid rgba(62,207,110,.3);letter-spacing:.04em}
+.check{list-style:none;padding:0;margin:14px 0 0}.check li{padding:7px 0 7px 26px;position:relative;font-size:14px;border-top:1px solid var(--line)}.check li:before{content:"";position:absolute;left:2px;top:13px;width:12px;height:7px;border-left:2px solid var(--green);border-bottom:2px solid var(--green);transform:rotate(-45deg)}
+.cash{display:grid;gap:8px}.cash .c{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line);font-size:13.5px}.cash .c b{font-family:var(--mono);font-weight:500}.cash .c.zero b{color:var(--green)}
+.terms{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.term{padding:14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);cursor:pointer;transition:.15s}.term:hover,.term.on{border-color:rgba(255,68,56,.55);background:rgba(255,68,56,.07)}.term b{display:block;font-size:14px}.term span{font-size:12.5px;color:var(--mut)}
+.calc{padding:24px;display:grid;grid-template-columns:1fr 1.1fr;gap:26px}
+.field{margin-bottom:16px}.field label{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);margin-bottom:7px}.field label b{color:var(--text);font-family:var(--mono);font-weight:500}
+input[type=range]{width:100%;accent-color:var(--red)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}.seg button{flex:1;min-width:120px;font:500 12.5px var(--sans);color:var(--mut);background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:9px 8px;cursor:pointer;text-align:left}.seg button b{display:block;color:var(--text);font-family:var(--mono);font-weight:500;font-size:14px}.seg button.on{border-color:rgba(255,68,56,.6);background:rgba(255,68,56,.08)}
+.numin{width:100%;font:500 16px var(--mono);color:var(--text);background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.out{display:grid;grid-template-columns:1fr 1fr;gap:10px}.out .o{padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid var(--line)}.out .o span{font-size:12px;color:var(--mut)}.out .o b{display:block;font:500 26px var(--mono);letter-spacing:-.04em}
+.out .o.hl{grid-column:1/-1;background:linear-gradient(135deg,rgba(255,68,56,.16),rgba(255,68,56,.04));border-color:rgba(255,68,56,.35)}.out .o.hl b{font-size:40px}
+.note{font-size:12px;color:var(--dim);margin-top:12px}
+.flag{display:inline-block;font:600 10.5px var(--mono);letter-spacing:.06em;color:var(--yellow);border:1px dashed rgba(245,181,68,.5);border-radius:999px;padding:2px 8px;vertical-align:2px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}th,td{text-align:left;padding:10px 12px;border-top:1px solid var(--line)}th{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);border-top:0}td.m{font-family:var(--mono)}
+.cta{padding:40px 34px;text-align:center;background:linear-gradient(135deg,rgba(255,68,56,.18),rgba(255,255,255,.03))}
+.cta h2{margin-bottom:10px}.cta .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+footer{margin-top:40px;color:var(--dim);font-size:12px;line-height:1.6}
+footer a{color:var(--mut)}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2,.tl,.price,.calc,.terms{grid-template-columns:1fr}nav .links{display:none}.hero{padding:30px 22px}}
+</style></head><body><div class="bg"></div><main>
+<nav class="glass"><a class="brand" href="#top"><img src="favicon.png" alt=""><span class="word">ALETTO<i>.</i></span></a>
+<div class="links"><a href="#timeline">Timeline</a><a href="#scorecard">Scorecard</a><a href="#ours">What we got wrong</a><a href="#followup">Follow-up data</a><a href="#forward">Path forward</a></div>
+<a class="btn sm" href="#forward">Path forward</a></nav>
+
+<header id="top" class="glass hero">
+<div class="eyebrow">Prepared for DBSync · Data Alignment Meeting · Nov 4, 2026</div>
+<h1>The honest picture,<br><em>and a fair way forward.</em></h1>
+<p class="lead">Rajeev, Joel, John and team: this page puts one shared set of numbers on the table, owns what Aletto got wrong, lays out what the follow-up data shows without blame, and proposes a reset for the rest of the term.</p>
+<div class="chips"><span class="chip">Ads live Aug 13 → paused Oct 23</span><span class="chip">16-week pilot term</span><span class="chip">Sources: Meta (Windsor), GHL, DBSync Salesforce exports</span></div>
+</header>
+
+<section id="timeline">
+<div class="hd"><div class="eyebrow">01 · Flight timeline</div><h2>What happened, in order</h2></div>
+<div class="tl">
+<div class="glass step"><div class="d">June</div><h3>Pilot paid</h3><p>DBSync paid the $20,000 pilot fee (INV-100413, due Jun 23).</p></div>
+<div class="glass step"><div class="d">Jul 9 – Jul 29</div><h3>Process agreed</h3><p>Agreed that new leads get a call within 5 minutes, with John owning the calls.</p></div>
+<div class="glass step"><div class="d">Aug 13</div><h3>Ads launched</h3><p>About 7 weeks after payment. That's too long, and it's on us.</p></div>
+<div class="glass step"><div class="d">Sep 10 &amp; 14</div><h3>Call exports</h3><p>John sent two Salesforce activity exports. They are the last call records we have.</p></div>
+<div class="glass step"><div class="d">Sep 14 – Oct 23</div><h3>About 39 more leads</h3><p>Leads kept coming in, including Capital One, Apple, the U.S. FDA, Rockwell Automation and CDW. We have no call data for this period.</p></div>
+<div class="glass step"><div class="d">Oct 23</div><h3>Ads paused</h3><p>About 10 weeks of flight, with $8,914 spent.</p></div>
+<div class="glass step"><div class="d">Oct 27 – 29</div><h3>Concerns raised</h3><p>Rajeev questioned the lead quality. Joel asked for this meeting to close the gaps.</p></div>
+<div class="glass step"><div class="d">~Dec 3</div><h3>Term end</h3><p>16 weeks counted from launch. <span class="flag">TO CONFIRM</span></p></div>
+</div></section>
+
+<section id="scorecard">
+<div class="hd"><div class="eyebrow">02 · Results scorecard</div><h2>Aug 13 – Oct 23, real numbers only</h2><p class="muted">The ads drew attention. They didn't turn into enough meetings, and none have become pipeline yet.</p></div>
+<div class="grid g4">
+<div class="glass kpi"><span>Meta ad spend</span><b>$8,914</b><small>Aug 13 – Oct 23</small></div>
+<div class="glass kpi"><span>Opt-ins</span><b>63</b><small>~$141 per lead</small></div>
+<div class="glass kpi"><span>Click-through rate</span><b>4.07%</b><small>Strong (benchmark &gt;1%)</small></div>
+<div class="glass kpi"><span>Opt-in rate</span><b>0.64%</b><small>Weak (benchmark &gt;5%)</small></div>
+<div class="glass kpi"><span>MQLs (form-qualified)</span><b>33</b><small>52% of opt-ins</small></div>
+<div class="glass kpi"><span>Verified good-fit (ICP)</span><b>11</b><small>Employer + role checked</small></div>
+<div class="glass kpi"><span>Meetings booked</span><b>6</b><small>vs 20-meeting guarantee</small></div>
+<div class="glass kpi"><span>Pipeline / revenue</span><b>$0</b><small>None reported</small></div>
+</div>
+<div class="glass card" style="margin-top:12px"><div class="rowl"><span>Guarantee target: qualified meetings within the term</span><b>20</b></div><div class="rowl"><span>Meetings booked so far</span><b>6</b></div><div class="rowl"><span>Gap</span><b style="color:var(--yellow)">14</b></div></div>
+</section>
+
+<section id="ours">
+<div class="hd"><div class="eyebrow">03 · What we got wrong</div><h2>Our mistakes, stated plainly</h2></div>
+<div class="grid g2">
+<div class="glass promise"><div class="n">1</div><div><h3>The opt-in page underperformed</h3><p>9,877 people clicked, but only 0.64% opted in. The ads did their job and our page and pop-up didn't. That's Aletto's to fix.</p></div></div>
+<div class="glass promise"><div class="n">2</div><div><h3>Targeting was too broad</h3><p>Only 11 of 63 opt-ins checked out as a real ICP fit. We should have narrowed to data engineers and architects sooner. We agreed to that on Oct 23.</p></div></div>
+<div class="glass promise"><div class="n">3</div><div><h3>Launch was slow</h3><p>Payment to launch took about 7 weeks, which ate into the momentum you paid for.</p></div></div>
+<div class="glass promise"><div class="n">4</div><div><h3>We didn't monitor follow-up</h3><p>We never set up call logging in our CRM, and from Sep 14 to late October we didn't chase updated call reports. We should have caught the gap in week 3, not week 10.</p></div></div>
+</div>
+<div class="glass quote" style="margin-top:12px"><p><b>Correction:</b> our earlier page said "46 of 63 leads were never called." That overstates it. John's exports end Sep 14 and about 39 leads came in after that, so for those leads we have <b>no data</b>. That doesn't mean nobody called them. We're sorry for putting it that way.</p><span>CORRECTION · NOV 4, 2026</span></div>
+</section>
+
+<section id="followup">
+<div class="hd"><div class="eyebrow">04 · What the data shows on follow-up</div><h2>Facts from John's Salesforce exports (Aug 13 – Sep 14)</h2><p class="muted">This is shared so we can fix the process together. It isn't meant to blame anyone.</p></div>
+<div class="grid g3">
+<div class="glass kpi"><span>Called within 5 min</span><b>0</b><small>1 within 10 min</small></div>
+<div class="glass kpi"><span>Typical first call</span><b>~9 hrs</b><small>Mostly the next business morning</small></div>
+<div class="glass kpi"><span>Calls per lead</span><b>2.9</b><small>183 calls · 5 leads reached 12</small></div>
+</div>
+<div class="glass card" style="margin-top:12px"><h3>To be fair to John</h3><p class="muted">On Sep 10 and 14 John told us many of the phone numbers were unreachable and some leads asked not to be contacted again. In those cases he switched to LinkedIn instead of calling aggressively. That's a reasonable call, and it also points to the lead-quality and targeting problems we own above.</p><p class="muted" style="margin:0">None of the 183 calls were logged in the shared GHL CRM, so neither side could see the full picture in real time. We need to fix that first.</p></div>
+</section>
+
+<section id="forward">
+<div class="hd"><div class="eyebrow">05 · Path forward</div><h2>A reset for the rest of the term</h2><p class="muted">The traffic is there: a 4.07% click-through rate and Fortune 500 sign-ups. What needs fixing is fit, conversion and follow-up.</p></div>
+<div class="grid g3">
+<div class="glass ws"><div class="ico">🎯</div><h3>Tighter targeting</h3><ul><li>Data engineers and architects only</li><li>Enterprise focus (DB-to-DB replication buyers)</li></ul></div>
+<div class="glass ws"><div class="ico">🧲</div><h3>Better opt-in quality</h3><ul><li>Add a qualifying step to the lead-magnet pop-up</li><li>Fewer, better-fit leads</li></ul></div>
+<div class="glass ws"><div class="ico">📞</div><h3>Shared follow-up rules</h3><ul><li>Every call logged in GHL</li><li>First call within 5 minutes</li><li>Option: Aletto sources a dedicated rep</li></ul></div>
+<div class="glass ws"><div class="ico">🤝</div><h3>Joint push on the 11</h3><ul><li>Work the 11 verified good-fit leads together</li><li>Start with Capital One, then Apple and the FDA</li></ul></div>
+<div class="glass ws"><div class="ico">📊</div><h3>One shared scorecard</h3><ul><li>Weekly numbers both sides agree on</li><li>Scored against the 20-meeting guarantee at term end</li></ul></div>
+<div class="glass ws"><div class="ico">🔁</div><h3>Referral / reseller option</h3><ul><li>Explore DBSync's referral or reseller program as a partnership path</li><li>Terms to be clarified</li></ul></div>
+</div>
+<div class="glass card" style="margin-top:12px"><div class="rowl"><span>Restart ads</span><b>After targeting and pop-up changes are live</b></div><div class="rowl"><span>Review cadence</span><b>Weekly</b></div><div class="rowl"><span>Investment for any next phase</span><b>To discuss</b></div></div>
+</section>
+
+<section><div class="glass cta"><h2>Agree the numbers, then fix what's broken.</h2><p class="muted">We'd rather earn DBSync's business with results than argue about the past.</p></div></section>
+<footer>Sources: Meta Ads via Windsor (DBSync ad account), DBSync's GoHighLevel sub-account, and DBSync's Salesforce activity exports (Sep 10 &amp; 14, 2026). The ~$141 cost per lead is $8,914 ÷ 63. Prepared by Aletto · Confidential.</footer>
+</main></body></html>
